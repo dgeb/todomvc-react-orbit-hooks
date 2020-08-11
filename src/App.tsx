@@ -1,27 +1,25 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import TodoList from './TodoList';
 
 interface AppProps {}
 
 function App({}: AppProps) {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+    <main>
+      <section className="todoapp">
+        <h1>todos</h1>
+        <TodoList />
+      </section>
+      <footer className="info">
+        <p>Double-click to edit a todo</p>
         <p>
-          Edit <code>src/App.tsx</code> and save to reload.
+          Created by
+          <a href="http://github.com/dgeb">Dan Gebhardt</a>,
+          <a href="http://github.com/addyosmani">Addy Osmani</a>
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+        <p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
+      </footer>
+    </main>
   );
 }
 
