@@ -1,49 +1,63 @@
 import React, { useState } from 'react';
-import type { Todo } from './todo';
+import memorySource from './orbit/memorySource';
+import type { Todo } from './records/todo';
+import { cloneRecordIdentity } from '@orbit/data';
 
 interface TodoItemProps {
   todo: Todo;
-  updateTodo: (id: string, text: string, completed: boolean) => void;
-  removeTodo: (id: string) => void;
 }
 
-function TodoItem({ todo, updateTodo, removeTodo }: TodoItemProps) {
+function TodoItem({ todo }: TodoItemProps) {
   const [state, setState] = useState({
     isEditing: false,
   });
 
-  const startEditing = (e: any) => {
+  function startEditing(e: any) {
     setState({ isEditing: true });
-  };
+  }
 
-  const doneEditing = (e: any) => {
+  function doneEditing(e: any) {
     setState({ isEditing: false });
-  };
+  }
 
-  const handleTextChange = (e: any) => {
-    updateTodo(todo.id, e.target.value, todo.attributes.completed);
-  };
+  async function replaceAttribute(attribute: string, value: unknown) {
+    await memorySource.update((t) =>
+      t.replaceAttribute(cloneRecordIdentity(todo), attribute, value),
+    );
+  }
 
-  const handleKeydown = (e: any) => {
+  async function removeRecord() {
+    await memorySource.update((t) =>
+      t.removeRecord(cloneRecordIdentity(todo)),
+    );
+  }
+
+  function handleTextChange(e: any) {
+    replaceAttribute('description', e.target.value);
+  }
+
+  function handleKeydown(e: any) {
     if (e.keyCode === 13) {
       e.target.blur();
     } else if (e.keyCode === 27) {
       setState({ isEditing: false });
     }
+  }
+
+  function handleCompletedChange(e: any) {
+    replaceAttribute('completed', !!e.target.checked);
   };
 
-  const handleCompletedChange = (e: any) => {
-    updateTodo(todo.id, todo.attributes.description, !!e.target.checked);
-  };
-
-  const handleRemove = (e: any) => {
-    removeTodo(todo.id);
+  function handleRemove(e: any) {
+    removeRecord();
   };
 
   return (
     <li
       className={
-        (state.isEditing && 'editing') + ' ' + (todo.attributes.completed && 'completed')
+        (state.isEditing && 'editing') +
+        ' ' +
+        (todo.attributes.completed && 'completed')
       }
     >
       <div className="view">
@@ -53,7 +67,9 @@ function TodoItem({ todo, updateTodo, removeTodo }: TodoItemProps) {
           checked={todo.attributes.completed}
           onChange={handleCompletedChange}
         />
-        <label onDoubleClick={startEditing}>{todo.attributes.description}</label>
+        <label onDoubleClick={startEditing}>
+          {todo.attributes.description}
+        </label>
         <button className="destroy" onClick={handleRemove}></button>
       </div>
       {state.isEditing && (

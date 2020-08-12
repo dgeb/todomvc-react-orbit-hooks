@@ -1,72 +1,43 @@
-import React, { useRef, useEffect, useState, RefObject } from 'react';
-import type { Todo } from './todo';
+import React, { useRef, useEffect, RefObject } from 'react';
+import type { Todo } from './records/todo';
 import TodoItem from './TodoItem';
 import memorySource from './orbit/memorySource';
 import useLiveQuery from './hooks/useLiveQuery';
 
 interface TodoListProps {}
 
-let gid = 0;
-
-function generateId() {
-  return `${gid++}`;
-}
-
 function TodoList({}: TodoListProps) {
-  const textInput: RefObject<HTMLInputElement> = useRef(null);
-
-  const updateTodo = (
-    id: string,
-    description: string,
-    completed: boolean,
-  ): void => {
-    memorySource.cache.patch((t) =>
-      t.updateRecord({
+  async function addTodo(description: string): Promise<void> {
+    await memorySource.update((t) =>
+      t.addRecord({
         type: 'todo',
-        id,
-        attributes: {
-          description,
-          completed,
-        },
-      }),
-    );
-  };
-
-  const addTodo = (description: string): void => {
-    memorySource.cache.patch((t) =>
-      t.updateRecord({
-        type: 'todo',
-        id: generateId(),
+        id: memorySource.schema.generateId(),
         attributes: {
           description,
           completed: false,
+          created: Date.now(),
         },
       }),
     );
-  };
+  }
 
-  const removeTodo = (id: string): void => {
-    memorySource.cache.patch((t) =>
-      t.removeRecord({
-        type: 'todo',
-        id,
-      }),
-    );
-  };
-
-  const onKeyDown = (e: any): void => {
+  function onKeyDown(e: any): void {
     if (e.keyCode === 13 && e.target.value !== '') {
       addTodo(e.target.value);
       e.target.value = '';
     }
-  };
+  }
+
+  const textInput: RefObject<HTMLInputElement> = useRef(null);
 
   useEffect(() => {
     textInput.current?.focus();
   }, []);
 
   const [todos] = useLiveQuery(
-    memorySource.cache.liveQuery((q) => q.findRecords('todo'))
+    memorySource.cache.liveQuery((q) =>
+      q.findRecords('todo').sort({ attribute: 'created' }),
+    ),
   );
 
   return (
@@ -82,12 +53,7 @@ function TodoList({}: TodoListProps) {
       <section className="main">
         <ul className="todo-list">
           {(todos as Todo[]).map((todo, index) => (
-            <TodoItem
-              key={index}
-              todo={todo}
-              updateTodo={updateTodo}
-              removeTodo={removeTodo}
-            />
+            <TodoItem key={index} todo={todo} />
           ))}
         </ul>
       </section>
