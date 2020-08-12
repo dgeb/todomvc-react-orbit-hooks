@@ -34,7 +34,7 @@ function TodoList({}: TodoListProps) {
     textInput.current?.focus();
   }, []);
 
-  const [todos] = useLiveQuery(
+  const todos = useLiveQuery(
     memorySource.cache.liveQuery((q) =>
       q.findRecords('todo').sort({ attribute: 'created' }),
     ),
