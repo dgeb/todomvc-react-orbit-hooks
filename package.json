@@ -1,4 +1,11 @@
 {
+  "name": "todomvc-react-orbit-hooks",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "contributors": [
+    "Dan Gebhardt (http://www.cerebris.com)"
+  ],
   "scripts": {
     "start": "snowpack dev",
     "build": "snowpack build",
