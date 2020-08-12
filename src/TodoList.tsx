@@ -1,7 +1,8 @@
 import React, { useRef, useEffect, useState, RefObject } from 'react';
-import TodoItem from './TodoItem';
 import type { Todo } from './todo';
-import { getNodeText } from '@testing-library/react';
+import TodoItem from './TodoItem';
+import memorySource from './orbit/memorySource';
+import useLiveQuery from './hooks/useLiveQuery';
 
 interface TodoListProps {}
 
@@ -14,31 +15,43 @@ function generateId() {
 function TodoList({}: TodoListProps) {
   const textInput: RefObject<HTMLInputElement> = useRef(null);
 
-  const [todos, setTodos] = useState([] as Todo[]);
-
-  const updateTodo = (id: string, text: string, completed: boolean): void => {
-    // Prepare new todos state
-    const newTodos: Todo[] = [...todos];
-
-    const updatedTodo = newTodos.find((todo: Todo) => todo.id === id);
-    updatedTodo!.text = text;
-    updatedTodo!.completed = completed;
-
-    setTodos(newTodos);
+  const updateTodo = (
+    id: string,
+    description: string,
+    completed: boolean,
+  ): void => {
+    memorySource.cache.patch((t) =>
+      t.updateRecord({
+        type: 'todo',
+        id,
+        attributes: {
+          description,
+          completed,
+        },
+      }),
+    );
   };
 
-  const addTodo = (text: string): void => {
-    const newTodo: Todo = {
-      id: generateId(),
-      text,
-      completed: false
-    };
-    setTodos([...todos, newTodo]);
+  const addTodo = (description: string): void => {
+    memorySource.cache.patch((t) =>
+      t.updateRecord({
+        type: 'todo',
+        id: generateId(),
+        attributes: {
+          description,
+          completed: false,
+        },
+      }),
+    );
   };
 
   const removeTodo = (id: string): void => {
-    const newTodos: Todo[] = todos.filter((todo: Todo) => todo.id !== id);
-    setTodos(newTodos);
+    memorySource.cache.patch((t) =>
+      t.removeRecord({
+        type: 'todo',
+        id,
+      }),
+    );
   };
 
   const onKeyDown = (e: any): void => {
@@ -46,11 +59,15 @@ function TodoList({}: TodoListProps) {
       addTodo(e.target.value);
       e.target.value = '';
     }
-  }
+  };
 
   useEffect(() => {
     textInput.current?.focus();
   }, []);
+
+  const [todos] = useLiveQuery(
+    memorySource.cache.liveQuery((q) => q.findRecords('todo'))
+  );
 
   return (
     <div>
@@ -64,12 +81,13 @@ function TodoList({}: TodoListProps) {
       </header>
       <section className="main">
         <ul className="todo-list">
-          {todos.map((todo, index) => (
+          {(todos as Todo[]).map((todo, index) => (
             <TodoItem
               key={index}
               todo={todo}
               updateTodo={updateTodo}
-              removeTodo={removeTodo} />
+              removeTodo={removeTodo}
+            />
           ))}
         </ul>
       </section>

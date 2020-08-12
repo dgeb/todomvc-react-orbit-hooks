@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, RefObject } from 'react';
+import React, { useState } from 'react';
 import type { Todo } from './todo';
 
 interface TodoItemProps {
@@ -21,7 +21,7 @@ function TodoItem({ todo, updateTodo, removeTodo }: TodoItemProps) {
   };
 
   const handleTextChange = (e: any) => {
-    updateTodo(todo.id, e.target.value, todo.completed);
+    updateTodo(todo.id, e.target.value, todo.attributes.completed);
   };
 
   const handleKeydown = (e: any) => {
@@ -33,7 +33,7 @@ function TodoItem({ todo, updateTodo, removeTodo }: TodoItemProps) {
   };
 
   const handleCompletedChange = (e: any) => {
-    updateTodo(todo.id, todo.text, !!e.target.checked);
+    updateTodo(todo.id, todo.attributes.description, !!e.target.checked);
   };
 
   const handleRemove = (e: any) => {
@@ -43,23 +43,23 @@ function TodoItem({ todo, updateTodo, removeTodo }: TodoItemProps) {
   return (
     <li
       className={
-        (state.isEditing && 'editing') + ' ' + (todo.completed && 'completed')
+        (state.isEditing && 'editing') + ' ' + (todo.attributes.completed && 'completed')
       }
     >
       <div className="view">
         <input
           className="toggle"
           type="checkbox"
-          checked={todo.completed}
+          checked={todo.attributes.completed}
           onChange={handleCompletedChange}
         />
-        <label onDoubleClick={startEditing}>{todo.text}</label>
+        <label onDoubleClick={startEditing}>{todo.attributes.description}</label>
         <button className="destroy" onClick={handleRemove}></button>
       </div>
       {state.isEditing && (
         <input
           className="edit"
-          value={todo.text}
+          value={todo.attributes.description}
           onChange={handleTextChange}
           onBlur={doneEditing}
           onKeyDown={handleKeydown}
