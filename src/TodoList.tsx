@@ -15,13 +15,14 @@ function TodoList({}: TodoListProps) {
         attributes: {
           description,
           completed: false,
-          created: Date.now(),
-        },
-      }),
+          created: Date.now()
+        }
+      })
     );
+    retry();
   }
 
-  function onKeyDown(e: any): void {
+  function handleKeyDown(e: any): void {
     if (e.keyCode === 13 && e.target.value !== '') {
       addTodo(e.target.value);
       e.target.value = '';
@@ -46,7 +47,7 @@ function TodoList({}: TodoListProps) {
         <input
           className="new-todo"
           placeholder="What needs to be done?"
-          onKeyDown={onKeyDown}
+          onKeyDown={handleKeyDown}
           ref={textInput}
         />
       </header>

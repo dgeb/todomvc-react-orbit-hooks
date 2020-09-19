@@ -6,10 +6,10 @@ const schema = new Schema({
       attributes: {
         description: { type: 'string' },
         completed: { type: 'boolean' },
-        created: { type: 'datetime' },
-      },
-    },
-  },
+        created: { type: 'datetime' }
+      }
+    }
+  }
 });
 
 export default schema;

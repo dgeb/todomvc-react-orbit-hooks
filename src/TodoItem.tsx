@@ -9,7 +9,7 @@ interface TodoItemProps {
 
 function TodoItem({ todo }: TodoItemProps) {
   const [state, setState] = useState({
-    isEditing: false,
+    isEditing: false
   });
 
   function startEditing(e: any) {
@@ -22,14 +22,12 @@ function TodoItem({ todo }: TodoItemProps) {
 
   async function replaceAttribute(attribute: string, value: unknown) {
     await memorySource.update((t) =>
-      t.replaceAttribute(cloneRecordIdentity(todo), attribute, value),
+      t.replaceAttribute(cloneRecordIdentity(todo), attribute, value)
     );
   }
 
   async function removeRecord() {
-    await memorySource.update((t) =>
-      t.removeRecord(cloneRecordIdentity(todo)),
-    );
+    await memorySource.update((t) => t.removeRecord(cloneRecordIdentity(todo)));
   }
 
   function handleTextChange(e: any) {
@@ -46,11 +44,11 @@ function TodoItem({ todo }: TodoItemProps) {
 
   function handleCompletedChange(e: any) {
     replaceAttribute('completed', !!e.target.checked);
-  };
+  }
 
   function handleRemove(e: any) {
     removeRecord();
-  };
+  }
 
   return (
     <li
