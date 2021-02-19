@@ -1,31 +1,30 @@
 import { useEffect, useState } from 'react';
-import type { QueryResult } from '@orbit/record-cache';
-import {
-  buildQuery as bq,
-  Query,
-  QueryBuilder,
-  QueryOrExpressions,
-  RequestOptions
-} from '@orbit/data';
+import { buildQuery as bq, RequestOptions } from '@orbit/data';
+import type {
+  RecordQueryBuilder,
+  RecordQueryResult,
+  RecordQueryOrExpressions,
+  RecordQuery
+} from '@orbit/records';
 import type { QueryDispatch } from './shared/queries';
 
 export interface AsyncQueryable {
   query(
-    queryOrExpressions: QueryOrExpressions,
+    queryOrExpressions: RecordQueryOrExpressions,
     options?: RequestOptions,
     id?: string
-  ): Promise<QueryResult>;
+  ): Promise<RecordQueryResult>;
 
-  queryBuilder: QueryBuilder;
+  queryBuilder: RecordQueryBuilder;
 }
 
 export default function useQuery(
   queryable: AsyncQueryable,
-  queryOrExpressions: QueryOrExpressions,
+  queryOrExpressions: RecordQueryOrExpressions,
   queryOptions?: RequestOptions,
   queryId?: string
 ): {
-  data: QueryResult | undefined;
+  data: RecordQueryResult | undefined;
   error: Error | undefined;
   loading: boolean;
   retry: () => void;
@@ -34,15 +33,15 @@ export default function useQuery(
   const [query, setQuery] = useState(
     buildQuery(queryOrExpressions, queryOptions, queryId)
   );
-  const [data, setData] = useState<QueryResult | undefined>();
+  const [data, setData] = useState<RecordQueryResult | undefined>();
   const [error, setError] = useState<Error | undefined>();
   const [loading, setLoading] = useState(true);
 
   function buildQuery(
-    queryOrExpressions: QueryOrExpressions,
+    queryOrExpressions: RecordQueryOrExpressions,
     queryOptions?: RequestOptions,
     queryId?: string
-  ): Query {
+  ): RecordQuery {
     return bq(
       queryOrExpressions,
       queryOptions,
@@ -66,7 +65,7 @@ export default function useQuery(
   }
 
   const reset = (
-    queryOrExpressions: QueryOrExpressions,
+    queryOrExpressions: RecordQueryOrExpressions,
     queryOptions?: RequestOptions,
     queryId?: string
   ) => {

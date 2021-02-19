@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import memorySource from './orbit/memorySource';
 import type { Todo } from './records/todo';
-import { cloneRecordIdentity } from '@orbit/data';
+import { cloneRecordIdentity } from '@orbit/records';
 
 interface TodoItemProps {
   todo: Todo;
