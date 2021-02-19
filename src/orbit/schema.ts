@@ -1,6 +1,6 @@
-import { Schema } from '@orbit/data';
+import { RecordSchema } from '@orbit/records';
 
-const schema = new Schema({
+const schema = new RecordSchema({
   models: {
     todo: {
       attributes: {

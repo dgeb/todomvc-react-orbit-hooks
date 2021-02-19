@@ -14,12 +14,12 @@
     "lint": "prettier --check \"src/**/*.{js,jsx,ts,tsx}\""
   },
   "dependencies": {
-    "@orbit/coordinator": "^0.17.0-beta.7",
-    "@orbit/core": "^0.17.0-beta.7",
-    "@orbit/data": "^0.17.0-beta.7",
-    "@orbit/identity-map": "^0.17.0-beta.7",
-    "@orbit/memory": "^0.17.0-beta.7",
-    "@orbit/utils": "^0.17.0-beta.7",
+    "@orbit/coordinator": "^0.17.0-beta.12",
+    "@orbit/core": "^0.17.0-beta.12",
+    "@orbit/data": "^0.17.0-beta.12",
+    "@orbit/identity-map": "^0.17.0-beta.12",
+    "@orbit/memory": "^0.17.0-beta.12",
+    "@orbit/utils": "^0.17.0-beta.12",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "todomvc-app-css": "^2.3.0",
@@ -35,7 +35,7 @@
     "jest": "^25.4.0",
     "prettier": "^2.1.2",
     "snowpack": "^2.7.5",
-    "typescript": "^3.9.7"
+    "typescript": "^4.1.5"
   },
   "prettier": "@orbit/prettier-config"
 }

@@ -1,10 +1,8 @@
-import type {
-  QueryOrExpressions,
-  RequestOptions
-} from '@orbit/data';
+import type { RequestOptions } from '@orbit/data';
+import type { RecordQueryOrExpressions } from '@orbit/records';
 
 export type QueryDispatch = (
-  queryOrExpressions: QueryOrExpressions,
+  queryOrExpressions: RecordQueryOrExpressions,
   queryOptions?: RequestOptions,
   queryId?: string
 ) => void;

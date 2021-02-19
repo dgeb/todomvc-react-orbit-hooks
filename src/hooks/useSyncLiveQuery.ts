@@ -1,37 +1,34 @@
 import { useEffect, useState } from 'react';
+import type { SyncRecordCache } from '@orbit/record-cache';
+import { buildQuery as bq, RequestOptions } from '@orbit/data';
 import type {
-  SyncRecordCache,
-  QueryResult
-} from '@orbit/record-cache';
-import {
-  buildQuery as bq,
-  Query,
-  QueryOrExpressions,
-  RequestOptions
-} from '@orbit/data';
+  RecordQuery,
+  RecordQueryOrExpressions,
+  RecordQueryResult
+} from '@orbit/records';
 import type { QueryDispatch } from './shared/queries';
 
 export default function useSyncLiveQuery(
   queryable: SyncRecordCache,
-  queryOrExpressions: QueryOrExpressions,
+  queryOrExpressions: RecordQueryOrExpressions,
   queryOptions?: RequestOptions,
   queryId?: string
 ): {
-  data: QueryResult | undefined;
+  data: RecordQueryResult | undefined;
   error: Error | undefined;
   reset: QueryDispatch;
 } {
   const [query, setQuery] = useState(
     buildQuery(queryOrExpressions, queryOptions, queryId)
   );
-  const [data, setData] = useState<QueryResult | undefined>();
+  const [data, setData] = useState<RecordQueryResult | undefined>();
   const [error, setError] = useState();
 
   function buildQuery(
-    queryOrExpressions: QueryOrExpressions,
+    queryOrExpressions: RecordQueryOrExpressions,
     queryOptions?: RequestOptions,
     queryId?: string
-  ): Query {
+  ): RecordQuery {
     return bq(
       queryOrExpressions,
       queryOptions,
@@ -63,7 +60,7 @@ export default function useSyncLiveQuery(
   useEffect(() => performLiveQuery(), [query]);
 
   const reset = (
-    queryOrExpressions: QueryOrExpressions,
+    queryOrExpressions: RecordQueryOrExpressions,
     queryOptions?: RequestOptions,
     queryId?: string
   ) => {
